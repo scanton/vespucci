@@ -1,0 +1,27 @@
+{
+  "name": "vespucci",
+  "version": "1.0.0",
+  "description": "Desktop web creawler to create site maps",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scanton/vespucci.git"
+  },
+  "keywords": [
+    "sitemap",
+    "crawler"
+  ],
+  "author": "Satori Canton",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/scanton/vespucci/issues"
+  },
+  "homepage": "https://github.com/scanton/vespucci#readme",
+  "dependencies": {
+    "electron-prebuilt": "^1.4.13"
+  }
+}

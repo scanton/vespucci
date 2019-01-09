@@ -1,2 +1,3 @@
-# vespucci
-web site map maker
+# Vespucci
+
+Desktop application to create site maps.
