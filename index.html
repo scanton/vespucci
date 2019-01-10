@@ -7,21 +7,25 @@
 		<link rel="stylesheet" href="css/style.css">
 	</head>
 	<body>
-		<div id="main-app" class="container-fluid">
-			<div class="row">
-				<div class="col-xs-12">
-					
-				</div>
-			</div>
+		<div id="main-app">
+			<vespucci></vespucci>
 		</div>
 		
-
 		<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
 		<script src="js/jquery-3.3.1.min.js"></script>
-		<script>if (window.module) module = window.module;</script>
 		<script type="text/javascript" src="js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="js/vue_2.5.21.js"></script>
 		<script type="text/javascript" src="js/vuex_3.0.1.js"></script>
+
+		<!-- views -->
+
+		<script src="views/CrawlParameters.js"></script>
+		<script src="views/ModalDialog.js"></script>
+		<script src="views/Results.js"></script>
+		<script src="views/SiteTestModeOptions.js"></script>
+		<script src="views/Vespucci.js"></script>
+
+		<script>if (window.module) module = window.module;</script>
 		<script type="text/javascript" src="js/script.js"></script>
 	</body>
 </html>

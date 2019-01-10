@@ -1,0 +1,7 @@
+.input-group-prepend .input-group-text {
+	min-width: 155px;
+}
+
+.results {
+	border: 1px solid #999;
+}

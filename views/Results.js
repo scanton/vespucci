@@ -1,9 +1,8 @@
 (function() {
-	var componentName = 'site-test-mode-options';
+	var componentName = 'results';
 	var s = `
 		<div class="` + componentName + ` container-fluid">
-			<h2>Test Mode Options</h2>
-			
+			<h2>Pages Found</h2>
 		</div>
 	`;
 	
