@@ -45,8 +45,18 @@ const store = new Vuex.Store({
 		}
 	},
 	mutations: {
+		addLink: function(state, link) {
+			if(link && !state.discoveredUrls.includes(link) && !state.visitedUrls.includes(link)) {
+				state.discoveredUrls.push(link);
+			}
+		},
 		addLinks: function(state, links) {
-			console.log(links);
+			if(links && links.length) {
+				let l = links.length;
+				while(l--) {
+					store.commit("addLink", links[l]);
+				}
+			}
 		},
 		crawl: function(state, isCrawl) {
 			if(isCrawl) {
