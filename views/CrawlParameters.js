@@ -8,7 +8,7 @@
 				<div class="input-group-prepend">
 					<span class="input-group-text">Host</span>
 				</div>
-				<input type="text" class="form-control" :value="host" @change-value="handleChangeHost" />
+				<input type="text" class="form-control" :value="host" v-model="host" />
 			</div>
 			<div class="input-group">
 				<div class="input-group-prepend">

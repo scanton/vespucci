@@ -11,6 +11,15 @@ require('./custom_modules/utils/enableContextMenu.js')();
 const stripObservers = function(obj) {
 	return JSON.parse(JSON.stringify(obj, null, 4));
 }
+const hasLink = function(arr, url) {
+	var l = arr.length;
+	while(l--) {
+		if(arr[l] && arr[l].link == url) {
+			return true;
+		}
+	}
+	return false;
+}
 
 Vue.use(Vuex);
 
@@ -29,13 +38,27 @@ const store = new Vuex.Store({
 		substituteHost: '',
 		upperPathLimit: '',
 		discoveredUrls: [],
-		visitedUrls: []
+		visitedUrls: [],
+		badUrls: [],
+		currentUrl: ''
 
 	},
 	actions: {
-		getNextUrl: function({ commit, state }, {host, path}) {
-			if(host && path) {
-				let url = host + path;
+		getNextUrl: function({ commit, state }) {
+			if(state.isCrawling) {
+				let url;
+				if(state.discoveredUrls.length) {
+					url = state.host + state.discoveredUrls[0];
+					state.visitedUrls.push(state.discoveredUrls.shift());
+				} else if(!state.visitedUrls.length) {
+					url = store.state.host + state.upperPathLimit;
+					state.visitedUrls.push(url);
+				} else {
+					commit("crawl", false);
+					return;
+				}
+				commit("setCurrentUrl", url);
+				console.log("current url", url);
 				request(url, function (error, response, body) {
 					if(error) {
 						console.error(error);
@@ -45,7 +68,8 @@ const store = new Vuex.Store({
 						$("a").each(function(i, el) {
 							a.push($(el).attr("href"));
 						});
-						commit('addLinks', a);
+						commit('addLinks', {links: a, page: url});
+						store.dispatch("getNextUrl");
 					}
 				});
 			}
@@ -70,34 +94,46 @@ const store = new Vuex.Store({
 		}
 	},
 	mutations: {
-		addLink: function(state, link) {
+		addLink: function(state, args) {
+			let link = args.link;
 			if(link && !state.discoveredUrls.includes(link) && !state.visitedUrls.includes(link)) {
-				state.discoveredUrls.push(link);
+				if(link.indexOf('http') == 0) {
+					state.badUrls.push({link: link, reason: "external link", page: args.page});
+				} else if(link.indexOf("#") == 0) {
+					state.badUrls.push({link: link, reason: "fragment", page: args.page});
+				} else if(link.indexOf(state.upperPathLimit) !== 0) {
+					state.badUrls.push({link: link, reason: "outside scope", page: args.page});
+				} else {
+					state.discoveredUrls.push(link);
+				}
 			}
 		},
-		addLinks: function(state, links) {
-			if(links && links.length) {
-				let l = links.length;
+		addLinks: function(state, args) {
+			if(args && args.links && args.links.length) {
+				let l = args.links.length;
 				while(l--) {
-					store.commit("addLink", links[l]);
+					store.commit("addLink", {link: args.links[l], page: args.page});
 				}
 			}
 		},
 		crawl: function(state, isCrawl) {
+			state.isCrawling = isCrawl;
 			if(isCrawl) {
 				if(state.host.length) {
-					store.dispatch("getNextUrl", {host: state.host, path: state.upperPathLimit});
+					store.dispatch("getNextUrl");
 				} else {
 					console.log("enter valid host to begin crawl");
 					return;
 				}
 			}
-			state.isCrawling = isCrawl;
 		},
 		setApplicationSettings: function(state, settings) {
 		  for(let s in settings) {
 		    Vue.set(state, s, settings[s]);
 		  }
+		},
+		setCurrentUrl: function(state, url) {
+			state.currentUrl = url;
 		},
 		updateHost: function(state, host) {
 			state.host = host;

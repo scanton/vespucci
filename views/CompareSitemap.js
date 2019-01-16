@@ -2,7 +2,7 @@
 	var componentName = 'compare-sitemap';
 	var s = `
 		<div class="` + componentName + ` container-fluid">
-			<button class="btn btn-default" style="float: right;">Load Sitemap</button>
+			<button class="btn btn-primary" style="float: right;">Load Sitemap</button>
 			<h2>Compare Sitemap</h2>
 		</div>
 	`;

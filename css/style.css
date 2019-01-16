@@ -7,3 +7,7 @@ h2, .button-container {
 .input-group {
 	margin-bottom: .25em;
 }
+.unfollowed ul, .results ol {
+	list-style: none;
+	padding: 0;
+}
