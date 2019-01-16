@@ -1,5 +1,7 @@
 const remote = require('electron').remote;
 const {dialog} = require('electron').remote;
+const request = require('request');
+const cheerio = require('cheerio');
 
 require('./custom_modules/utils/enableContextMenu.js')();
 
@@ -18,11 +20,54 @@ const store = new Vuex.Store({
 		knownPaths: [],
 		host: '',
 		substituteHost: '',
-		upperPathLimit: ''
+		upperPathLimit: '',
+		discoveredUrls: [],
+		visitedUrls: []
 
 	},
+	actions: {
+		getNextUrl: function({ commit, state }, {host, path}) {
+			if(host && path) {
+				let url = host + path;
+				request(url, function (error, response, body) {
+					if(error) {
+						console.error(error);
+					} else {
+						let $ = cheerio.load(body);
+						let a = [];
+						$("a").each(function(i, el) {
+							a.push($(el).attr("href"));
+						});
+						commit('addLinks', a);
+					}
+				});
+			}
+		}
+	},
 	mutations: {
-
+		addLinks: function(state, links) {
+			console.log(links);
+		},
+		crawl: function(state, isCrawl) {
+			if(isCrawl) {
+				if(state.host.length) {
+					store.dispatch("getNextUrl", {host: state.host, path: state.upperPathLimit});
+				} else {
+					console.log("enter valid host to begin crawl");
+					return;
+				}
+			}
+			state.isCrawling = isCrawl;
+		},
+		updateHost: function(state, host) {
+			state.host = host;
+		},
+		updateSubstituteHost: function(state, subHost) {
+			state.substituteHost = subHost;
+		},
+		updateUpperPathLimit: function(state, path) {
+			state.upperPathLimit = path;
+		}
 	}
 });
 

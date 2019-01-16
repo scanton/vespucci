@@ -1,11 +1,9 @@
 (function() {
-	var componentName = 'results';
+	var componentName = 'compare-sitemap';
 	var s = `
 		<div class="` + componentName + ` container-fluid">
-			<h2>Pages Found</h2>
-			<div class="pages-found-list">
-				
-			</div>
+			<button class="btn btn-default" style="float: right;">Load Sitemap</button>
+			<h2>Compare Sitemap</h2>
 		</div>
 	`;
 	

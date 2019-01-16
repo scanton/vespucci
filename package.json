@@ -23,6 +23,7 @@
   "homepage": "https://github.com/scanton/vespucci#readme",
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
-    "electron-prebuilt": "^1.4.13"
+    "electron-prebuilt": "^1.4.13",
+    "request": "^2.88.0"
   }
 }
