@@ -7,6 +7,7 @@
 		>
 			<div class="contents row">
 				<div class="col">
+					<compare-sitemap></compare-sitemap>
 					<site-test-mode-options></site-test-mode-options>
 					<crawl-parameters></crawl-parameters>
 					<results></results>

@@ -25,6 +25,7 @@
     "cheerio": "^1.0.0-rc.2",
     "electron-prebuilt": "^1.4.13",
     "fs-extra": "^7.0.1",
-    "tunnel-ssh": "^4.1.4"
+    "tunnel-ssh": "^4.1.4",
+    "request": "^2.88.0"
   }
 }

@@ -1,5 +1,7 @@
 const remote = require('electron').remote;
 const {dialog} = require('electron').remote;
+const request = require('request');
+const cheerio = require('cheerio');
 
 const fs = require('fs-extra');
 const tunnel = require('tunnel-ssh');
@@ -25,34 +27,86 @@ const store = new Vuex.Store({
 		knownPaths: [],
 		host: '',
 		substituteHost: '',
-		upperPathLimit: ''
+		upperPathLimit: '',
+		discoveredUrls: [],
+		visitedUrls: []
 
 	},
 	actions: {
-		readSettings: function({commit, state}) {
-			return new Promise((resolve, reject) => {
-				var path = __dirname + '/working_files/settings.json';
-				fs.pathExists(path, (err, exists) => {
-					if(exists) {
-						fs.readJson(path, (err, data) => {
-							if(err) {
-								reject(err);
-							} else {
-								resolve(data);
-							}
-						});
+		getNextUrl: function({ commit, state }, {host, path}) {
+			if(host && path) {
+				let url = host + path;
+				request(url, function (error, response, body) {
+					if(error) {
+						console.error(error);
 					} else {
-						resolve({});
+						let $ = cheerio.load(body);
+						let a = [];
+						$("a").each(function(i, el) {
+							a.push($(el).attr("href"));
+						});
+						commit('addLinks', a);
 					}
 				});
-			});
+			}
+		},
+		readSettings: function({commit, state}) {
+		  return new Promise((resolve, reject) => {
+		    var path = __dirname + '/working_files/settings.json';
+		    fs.pathExists(path, (err, exists) => {
+		      if(exists) {
+		        fs.readJson(path, (err, data) => {
+		          if(err) {
+		            reject(err);
+		          } else {
+		            resolve(data);
+		          }
+		        });
+		      } else {
+		        resolve({});
+		      }
+		    });
+		  });
 		}
 	},
 	mutations: {
-		setApplicationSettings: function(state, settings) {
-			for(let s in settings) {
-				Vue.set(state, s, settings[s]);
+		addLink: function(state, link) {
+			if(link && !state.discoveredUrls.includes(link) && !state.visitedUrls.includes(link)) {
+				state.discoveredUrls.push(link);
 			}
+		},
+		addLinks: function(state, links) {
+			if(links && links.length) {
+				let l = links.length;
+				while(l--) {
+					store.commit("addLink", links[l]);
+				}
+			}
+		},
+		crawl: function(state, isCrawl) {
+			if(isCrawl) {
+				if(state.host.length) {
+					store.dispatch("getNextUrl", {host: state.host, path: state.upperPathLimit});
+				} else {
+					console.log("enter valid host to begin crawl");
+					return;
+				}
+			}
+			state.isCrawling = isCrawl;
+		},
+		setApplicationSettings: function(state, settings) {
+		  for(let s in settings) {
+		    Vue.set(state, s, settings[s]);
+		  }
+		},
+		updateHost: function(state, host) {
+			state.host = host;
+		},
+		updateSubstituteHost: function(state, subHost) {
+			state.substituteHost = subHost;
+		},
+		updateUpperPathLimit: function(state, path) {
+			state.upperPathLimit = path;
 		}
 	}
 });

@@ -1,7 +1,9 @@
 .input-group-prepend .input-group-text {
 	min-width: 155px;
 }
-
-.results {
-	border: 1px solid #999;
+h2, .button-container {
+	margin-top: .5em;
+}
+.input-group {
+	margin-bottom: .25em;
 }
