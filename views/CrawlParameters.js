@@ -7,19 +7,19 @@
 				<div class="input-group-prepend">
 					<span class="input-group-text">Host</span>
 				</div>
-				<input type="text" class="form-control" placeholder="" />
+				<input type="text" class="form-control" :value="host" @change-value="handleChangeHost" />
 			</div>
 			<div class="input-group">
 				<div class="input-group-prepend">
 					<span class="input-group-text">Substitute Host</span>
 				</div>
-				<input type="text" class="form-control" placeholder="" />
+				<input type="text" class="form-control" :value="substituteHost" />
 			</div>
 			<div class="input-group">
 				<div class="input-group-prepend">
 					<span class="input-group-text">Upper Path Limit</span>
 				</div>
-				<input type="text" class="form-control" placeholder="" />
+				<input type="text" class="form-control" :value="upperPathLimit" />
 			</div>
 			<button class="btn btn-success" :class="{enabled: !isCrawling}">Crawl</button>
 			<button class="btn btn-warning" :class="{enabled: isCrawling}">Pause</button>
